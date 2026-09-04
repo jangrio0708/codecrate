@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON Formatter & Validator | CodeCrate</title>
+<meta name="description" content="Free online JSON formatter and validator. Beautify, minify, and validate JSON with clear error messages, entirely in your browser.">
+<link rel="canonical" href="https://jangrio0708.github.io/codecrate/tools/json-formatter.html">
+<link rel="stylesheet" href="../style.css">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6674915311639977" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="nav-row">
+    <a href="../index.html" class="brand">Code<span>Crate</span></a>
+    <nav class="main-nav">
+      <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="tool-page">
+  <h1>JSON Formatter & Validator</h1>
+  <p class="tool-intro">Paste JSON below to beautify, minify, or validate it. Errors are reported with a clear message so you can find the problem fast.</p>
+
+  <div class="panel wide">
+    <div class="field">
+      <label for="json-input">JSON input</label>
+      <textarea id="json-input" class="mono" placeholder='{"example": true, "items": [1, 2, 3]}'></textarea>
+    </div>
+    <div class="btn-row">
+      <button onclick="formatJson(2)">Beautify</button>
+      <button onclick="formatJson(0)">Minify</button>
+      <button class="secondary" onclick="copyOutput()">Copy Output</button>
+      <span class="copy-feedback" id="copy-feedback">Copied!</span>
+    </div>
+    <div id="json-error" class="error-text"></div>
+    <div class="field">
+      <label for="json-output">Output</label>
+      <textarea id="json-output" class="mono" readonly></textarea>
+    </div>
+  </div>
+
+  <div class="ad-slot">Ad space</div>
+
+  <section class="info-section">
+    <h2>What this tool does</h2>
+    <p>This formatter parses your JSON using the browser's built-in JSON parser, so any errors it reports (like a missing comma or an unquoted key) are the same errors a real application would hit. Beautify adds readable indentation and line breaks; minify strips all unnecessary whitespace to produce the smallest possible payload.</p>
+    <h2>Why format or minify JSON</h2>
+    <p>Beautified JSON is easier to read and debug during development, while minified JSON is smaller and faster to transmit over a network — useful for production API responses or config files. All processing happens locally in your browser; nothing you paste here is sent to a server.</p>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-note">© <span id="year"></span> CodeCrate. All tools are free to use.</div>
+    <div class="footer-links">
+      <a href="../about.html">About</a>
+      <a href="../privacy-policy.html">Privacy Policy</a>
+      <a href="../terms.html">Terms of Use</a>
+      <a href="../contact.html">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../script.js"></script>
+<script>
+function formatJson(indent) {
+  var input = document.getElementById('json-input').value;
+  var errorEl = document.getElementById('json-error');
+  var outputEl = document.getElementById('json-output');
+  errorEl.textContent = '';
+  try {
+    var parsed = JSON.parse(input);
+    outputEl.value = JSON.stringify(parsed, null, indent);
+  } catch (e) {
+    outputEl.value = '';
+    errorEl.textContent = 'Invalid JSON: ' + e.message;
+  }
+}
+function copyOutput() {
+  var output = document.getElementById('json-output');
+  if (!output.value) return;
+  navigator.clipboard.writeText(output.value).then(function () {
+    var fb = document.getElementById('copy-feedback');
+    fb.classList.add('show');
+    setTimeout(function () { fb.classList.remove('show'); }, 1500);
+  });
+}
+</script>
+</body>
+</html>

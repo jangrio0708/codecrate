@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UUID Generator | CodeCrate</title>
+<meta name="description" content="Free online UUID generator. Generate random version-4 UUIDs one at a time or in bulk, entirely in your browser.">
+<link rel="canonical" href="https://jangrio0708.github.io/codecrate/tools/uuid-generator.html">
+<link rel="stylesheet" href="../style.css">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6674915311639977" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="nav-row">
+    <a href="../index.html" class="brand">Code<span>Crate</span></a>
+    <nav class="main-nav">
+      <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="tool-page">
+  <h1>UUID Generator</h1>
+  <p class="tool-intro">Generate random version-4 UUIDs (universally unique identifiers), one at a time or in bulk.</p>
+
+  <div class="panel wide">
+    <div class="field">
+      <label for="uuid-count">Number to generate</label>
+      <input type="number" id="uuid-count" value="1" min="1" max="500">
+    </div>
+    <div class="btn-row">
+      <button onclick="generateUuids()">Generate</button>
+      <button class="secondary" onclick="copyUuids()">Copy All</button>
+      <span class="copy-feedback" id="copy-feedback">Copied!</span>
+    </div>
+    <div class="field">
+      <label for="uuid-output">Output</label>
+      <textarea id="uuid-output" class="mono" style="min-height:220px;" readonly></textarea>
+    </div>
+  </div>
+
+  <div class="ad-slot">Ad space</div>
+
+  <section class="info-section">
+    <h2>What is a UUID?</h2>
+    <p>A UUID (Universally Unique Identifier) is a 128-bit identifier formatted as 32 hexadecimal digits, typically shown as five groups separated by hyphens (e.g. <code>xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx</code>). Version 4 UUIDs are generated using random numbers, and the chance of a collision is astronomically small.</p>
+    <h2>Common uses</h2>
+    <p>UUIDs are widely used as database primary keys, session tokens, file names, and unique identifiers in distributed systems where you need uniqueness without a central coordinating authority. This generator uses your browser's cryptographically secure random number generator.</p>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-note">© <span id="year"></span> CodeCrate. All tools are free to use.</div>
+    <div class="footer-links">
+      <a href="../about.html">About</a>
+      <a href="../privacy-policy.html">Privacy Policy</a>
+      <a href="../terms.html">Terms of Use</a>
+      <a href="../contact.html">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../script.js"></script>
+<script>
+function generateUuid() {
+  if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+  var bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  bytes[6] = (bytes[6] & 0x0f) | 0x40;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  var hex = Array.from(bytes, function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+  return hex.slice(0, 8) + '-' + hex.slice(8, 12) + '-' + hex.slice(12, 16) + '-' + hex.slice(16, 20) + '-' + hex.slice(20);
+}
+
+function generateUuids() {
+  var count = Math.min(500, Math.max(1, parseInt(document.getElementById('uuid-count').value, 10) || 1));
+  var list = [];
+  for (var i = 0; i < count; i++) list.push(generateUuid());
+  document.getElementById('uuid-output').value = list.join('\n');
+}
+
+function copyUuids() {
+  var output = document.getElementById('uuid-output');
+  if (!output.value) return;
+  navigator.clipboard.writeText(output.value).then(function () {
+    var fb = document.getElementById('copy-feedback');
+    fb.classList.add('show');
+    setTimeout(function () { fb.classList.remove('show'); }, 1500);
+  });
+}
+
+generateUuids();
+</script>
+</body>
+</html>

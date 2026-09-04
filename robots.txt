@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jangrio0708.github.io/codecrate/sitemap.xml
